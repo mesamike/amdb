@@ -3,8 +3,9 @@ fresh: clean all
 all: amdb.dat
 	make delimited
 	$(eval amdbdiff = $(shell diff amdb.dat amdb.dat.old  2>&1 > /dev/null; echo $$?))
-	$(eval dfacdiff = $(shell diff dfac.dat dfac.dat.old  2>&1 > /dev/null; echo $$?))
-	@([ ${amdbdiff} -eq 0 ] && [ ${dfacdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
+#	$(eval dfacdiff = $(shell diff dfac.dat dfac.dat.old  2>&1 > /dev/null; echo $$?))
+#	@([ ${amdbdiff} -eq 0 ] && [ ${dfacdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
+	@([ ${amdbdiff} -eq 0 ]  && echo no changes) || (echo some changes; make upload)
 
 delimited:
 	date -u "+Last Updated %a, %b %d, %Y at %H%M UTC" > update.txt
@@ -47,15 +48,20 @@ app.dat: app gis_application.dat
 auths.dat: auths fac.dat app.dat ant.dat
 	./auths > auths.dat
 
-amdb.dat: amdb auths.dat call_sign_history.dat
+amdb.dat: amdb auths.dat callhist.dat
 	./amdb > amdb.dat
+
+callhist.dat: call_sign_history.dat
+	sort -n -k 5,5 -k 4,4 -t '|' call_sign_history.dat > callhist.dat
 
 ##########################
 # Extract the ZIP files
 facility.dat: facility.zip
 	unzip facility.zip
+
 gis_am_ant_sys.dat: gis_am_ant_sys.zip
 	unzip gis_am_ant_sys.zip
+
 gis_application.dat: gis_application.zip
 	unzip gis_application.zip
 
