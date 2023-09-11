@@ -1,6 +1,16 @@
 fresh: clean all
 
 all: amdb.dat
+	make delimited
+	$(eval amdbdiff = $(shell diff amdb.dat amdb.dat.old  2>&1 > /dev/null; echo $$?))
+	$(eval dfacdiff = $(shell diff dfac.dat dfac.dat.old  2>&1 > /dev/null; echo $$?))
+	@([ ${amdbdiff} -eq 0 ] && [ ${dfacdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
+
+delimited:
+	date -u "+Last Updated %a, %b %d, %Y at %H%M UTC" > update.txt
+	cat update.txt > amdb.txt
+	echo "FAC_ID|FREQ|CALL|STATE|COL|PWR_D|PWR_N|PWR_C|LAT|LON|STATUS|CALL_HIST" >> amdb.txt
+	cat amdb.dat >> amdb.txt
 
 ###################################
 # Compile the programs we need
@@ -70,8 +80,14 @@ call_sign_history.zip:
 #######################
 # cleanup rules
 clean:
-	rm -f *.dat *.dbf *.idx *.dbt *.txt *.zip *.log
+	([ -f amdb.dat ] && mv amdb.dat amdb.dat.old) || touch amdb.dat.old
+	([ -f dfac.dat ] && mv dfac.dat dfac.dat.old) || touch dfac.dat.old
+	rm -f *.dat *.txt *.zip *.log
 
 pristine: clean
 	rm -f fac ant app auths amdb
+
+upload:
+	scp amdb.dat dfac.dat update.txt rebuild gentoo@gentoo.net:~/mivadata/amdb/
+	scp amdb.txt gentoo@gentoo.net:~/radio/amdb/
 
