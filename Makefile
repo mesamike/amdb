@@ -1,11 +1,11 @@
 fresh: clean all
 
-all: amdb.dat
+all: amdb.dat #dfac.dat
 	make delimited
 	$(eval amdbdiff = $(shell diff amdb.dat amdb.dat.old  2>&1 > /dev/null; echo $$?))
-#	$(eval dfacdiff = $(shell diff dfac.dat dfac.dat.old  2>&1 > /dev/null; echo $$?))
-#	@([ ${amdbdiff} -eq 0 ] && [ ${dfacdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
-	@([ ${amdbdiff} -eq 0 ]  && echo no changes) || (echo some changes; make upload)
+	$(eval dfacdiff = $(shell diff dfac.dat dfac.dat.old  2>&1 > /dev/null; echo $$?))
+	@([ ${amdbdiff} -eq 0 ] && [ ${dfacdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
+#	@([ ${amdbdiff} -eq 0 ]  && echo no changes) || (echo some changes; make upload)
 
 delimited:
 	date -u "+Last Updated %a, %b %d, %Y at %H%M UTC" > update.txt
@@ -30,6 +30,10 @@ auths: auths.c parse.c amdb.h
 amdb: amdb.c parse.c amdb.h
 	gcc -o amdb amdb.c parse.c
 
+dfac:   dfac.c parse.c amdb.h
+	gcc -o dfac dfac.c parse.c
+
+
 ############################################
 # Make data file indexes for quicker seeking
 
@@ -37,13 +41,13 @@ amdb: amdb.c parse.c amdb.h
 ##########################
 # Distill the FCC data 
 fac.dat: fac facility.dat
-	./fac > fac.dat
+	./fac | sort -k 1,1 -t "|" > fac.dat
 
 ant.dat: ant gis_am_ant_sys.dat
-	./ant > ant.dat
+	./ant | sort -k 1,1 -t "|" > ant.dat 
 
 app.dat: app gis_application.dat
-	./app > app.dat
+	./app | sort -k 1,1 -t "|" > app.dat
 
 auths.dat: auths fac.dat app.dat ant.dat
 	./auths > auths.dat
@@ -53,6 +57,10 @@ amdb.dat: amdb auths.dat callhist.dat
 
 callhist.dat: call_sign_history.dat
 	sort -n -k 5,5 -k 4,4 -t '|' call_sign_history.dat > callhist.dat
+
+dfac.dat: dfac facility.dat call_sign_history.dat
+	./dfac > dfac.dat
+
 
 ##########################
 # Extract the ZIP files
@@ -94,6 +102,6 @@ pristine: clean
 	rm -f fac ant app auths amdb
 
 upload:
-	scp amdb.dat dfac.dat update.txt rebuild gentoo@gentoo.net:~/mivadata/amdb/
+	scp amdb.dat  update.txt rebuild gentoo@gentoo.net:~/mivadata/amdb/
 	scp amdb.txt gentoo@gentoo.net:~/radio/amdb/
 

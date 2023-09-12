@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "cdbs.h"
+#include "amdb.h"
 
 FILE *infile;
 FILE *callhistfile;
@@ -50,25 +50,23 @@ void get_callsigns(int facid)
 int main ()
 {
    char buffer[1024];	
-   char buffer2[1024];	
    facility fac;
 
    infile = fopen("facility.dat", "r");
    while (fgets(buffer, 1024, infile)) {
-      strcpy(buffer2, buffer);
-      parse_facility(buffer2, &fac);
+      lms_parse_facility(buffer2, &fac);
 
       if(
-         !strcmp(fac.fac_service, "AM") && 
-         !strcmp(fac.fac_country, "US") && 
-         (fac.fac_callsign[0] == 'D') 
+         !strcmp(fac.service_code, "AM") && 
+         (fac.callsign[0] == 'D') 
 
       ) {
          *strchr(buffer,'\n') = 0;
          *strrchr(buffer,'|') = 0;
          *strrchr(buffer,'^') = 0;
-         get_callsigns(fac.facility_id);
-         printf("%s%s\n",buffer, callhistory); 
+         //get_callsigns(fac.fac_id);
+          printf("%s|%d|%s|%s|%s}%d|%s         
+
       }
           
    }
