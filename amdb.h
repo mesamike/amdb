@@ -24,6 +24,7 @@ typedef struct {
    float lat;
    float lon;
    char status[6];
+   char ant_mode[10];
 } authorization;    
 
 typedef struct {

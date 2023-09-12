@@ -50,7 +50,7 @@ app.dat: app gis_application.dat
 	./app | sort -k 1,1 -t "|" > app.dat
 
 auths.dat: auths fac.dat app.dat ant.dat
-	./auths > auths.dat
+	./auths | sort -k 1,1 -t "|" > auths.dat
 
 amdb.dat: amdb auths.dat callhist.dat
 	./amdb > amdb.dat

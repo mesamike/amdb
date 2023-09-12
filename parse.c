@@ -29,6 +29,9 @@ void parse_auth(char *buffer, authorization *auth)
    /* hours of operation */
    auth->hours_operation = strtok(0, "|")[0];
 
+   /* ant_mode */
+   strcpy(auth->ant_mode, strtok(0, "|"));
+
    /* power */
    auth->power = atof(strtok(0, "|"));
 

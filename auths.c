@@ -53,7 +53,7 @@ int main ()
       parse_ant(buffer, &ant);
       if(get_app(ant.app_id, &app)) {
          if(get_fac(app.fac_id, &fac)) {
-            printf("%ld|%ld|%f|%s|%s|%s|%c|%f|%7.4f|%8.4f|%s|\n",
+            printf("%ld|%ld|%f|%s|%s|%s|%c|%s|%f|%7.4f|%8.4f|%s|\n",
                app.fac_id, 
                app.app_id, 
                app.fac_freq, 
@@ -61,6 +61,7 @@ int main ()
                app.comm_state,
                app.comm_city, 
                ant.hours_operation, 
+               ant.ant_mode,
                ant.power, 
                ant.lat, 
                ant.lon, 

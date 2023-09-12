@@ -58,6 +58,7 @@ int print_line(power *pwr, authorization *auth, char *callhist)
          putchar('|');
          if(pwr->c) printf("%.0f", pwr->c);
 
+         printf("|%s", auth->ant_mode);
          printf("|%.4f|%.4f|%s|", auth->lat, auth->lon, auth->status);
         
          if(callhist) 
