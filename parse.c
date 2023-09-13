@@ -7,42 +7,66 @@
 
 void parse_auth(char *buffer, authorization *auth)
 {
+   char *p1=buffer, *p2;
 
    /* fac_id */
-   auth->fac_id = atol(strtok(buffer, "|"));
+   *(p2 = strchr(p1, '|')) = 0;
+   auth->fac_id = atol(p1);
 
    /* app_id */
-   auth->app_id = atol(strtok(0, "|"));
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   auth->app_id = atol(p1);
 
    /* freq */
-   auth->freq = atof(strtok(0, "|")); 
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   auth->freq = atof(p1); 
 
    /* call sign */
-   strcpy(auth->callsign, strtok(0, "|"));
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   strcpy(auth->callsign, p1);
 
    /* state */
-   strcpy(auth->state, strtok(0, "|"));
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   strcpy(auth->state, p1);
  
    /* city */
-   strcpy(auth->city, strtok(0, "|"));
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   strcpy(auth->city, p1);
 
    /* hours of operation */
-   auth->hours_operation = strtok(0, "|")[0];
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   auth->hours_operation = *p1;
 
    /* ant_mode */
-   strcpy(auth->ant_mode, strtok(0, "|"));
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   strcpy(auth->ant_mode, p1);
 
    /* power */
-   auth->power = atof(strtok(0, "|"));
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   auth->power = atof(p1);
 
    /* latitude */
-   auth->lat = atof(strtok(0, "|"));
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   auth->lat = atof(p1);
 
    /* longitude */
-   auth->lon = atof(strtok(0, "|"));
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   auth->lon = atof(p1);
 
    /* status */
-   strcpy(auth->status, strtok(0, "|"));
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   strcpy(auth->status, p1);
 }
 
 void parse_callhist(char *buffer, callsign_hist *ch)

@@ -3,9 +3,9 @@ fresh: clean all
 all: amdb.dat #dfac.dat
 	make delimited
 	$(eval amdbdiff = $(shell diff amdb.dat amdb.dat.old  2>&1 > /dev/null; echo $$?))
-	$(eval dfacdiff = $(shell diff dfac.dat dfac.dat.old  2>&1 > /dev/null; echo $$?))
-	@([ ${amdbdiff} -eq 0 ] && [ ${dfacdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
-#	@([ ${amdbdiff} -eq 0 ]  && echo no changes) || (echo some changes; make upload)
+#	$(eval dfacdiff = $(shell diff dfac.dat dfac.dat.old  2>&1 > /dev/null; echo $$?))
+#	@([ ${amdbdiff} -eq 0 ] && [ ${dfacdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
+	@([ ${amdbdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
 
 delimited:
 	date -u "+Last Updated %a, %b %d, %Y at %H%M UTC" > update.txt
@@ -58,8 +58,8 @@ amdb.dat: amdb auths.dat callhist.dat
 callhist.dat: call_sign_history.dat
 	sort -n -k 5,5 -k 4,4 -t '|' call_sign_history.dat > callhist.dat
 
-dfac.dat: dfac facility.dat call_sign_history.dat
-	./dfac > dfac.dat
+#dfac.dat: dfac facility.dat call_sign_history.dat
+#	./dfac > dfac.dat
 
 
 ##########################
@@ -95,7 +95,7 @@ call_sign_history.zip:
 # cleanup rules
 clean:
 	([ -f amdb.dat ] && mv amdb.dat amdb.dat.old) || touch amdb.dat.old
-	([ -f dfac.dat ] && mv dfac.dat dfac.dat.old) || touch dfac.dat.old
+#	([ -f dfac.dat ] && mv dfac.dat dfac.dat.old) || touch dfac.dat.old
 	rm -f *.dat *.txt *.zip *.log
 
 pristine: clean

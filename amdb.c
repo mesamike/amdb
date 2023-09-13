@@ -87,6 +87,7 @@ int main ()
    while(fgets(buffer, BUFF_SIZE, authfile)) {
       parse_auth(buffer, ap[i]); 
 
+
       /* workaround for night auths that don't specify coords */ 
       if( (ap[i]->lat==0.0) && (ap[i]->lon ==0.0) ){
          ap[i]->lat = cur_lat; ap[i]->lon = cur_lon;

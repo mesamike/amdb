@@ -45,7 +45,7 @@ int main ()
    if(!(facfile = fopen("fac.dat", "r")))
       perror("fac.dat"), exit(1);
    if(!(appfile = fopen("app.dat", "r")))
-      perror("appl.dat"), exit(1);
+      perror("app.dat"), exit(1);
    if(!(antfile = fopen("ant.dat", "r")))
       perror("ant.dat"), exit(1);
 
