@@ -7,7 +7,7 @@ all: amdb.dat #dfac.dat
 #	@([ ${amdbdiff} -eq 0 ] && [ ${dfacdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
 	@([ ${amdbdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
 
-delimited: amdb.dat
+delimited:
 	date -u "+Last Updated %a, %b %d, %Y at %H%M UTC" > update.txt
 	cat update.txt > amdb.txt
 	echo "FAC_ID|FREQ|CALL|STATE|COL|PWR_D|PWR_N|PWR_C|LAT|LON|MODE|STATUS|CALL_HIST" >> amdb.txt

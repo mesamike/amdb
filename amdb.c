@@ -9,6 +9,10 @@ FILE *authfile;
 FILE *callhistfile;
 static char callhistory[BUFF_SIZE];
 
+/* workaround for auths that don't include antenna mode */
+char ant_mode[5];
+
+
 void get_callsigns(int facid)
 {
    callsign_hist ch;
@@ -58,7 +62,10 @@ int print_line(power *pwr, authorization *auth, char *callhist)
          putchar('|');
          if(pwr->c) printf("%.0f", pwr->c);
 
-         printf("|%s", auth->ant_mode);
+        /* workaround for auths that don't include antenna mode */
+         printf("|%s", ant_mode);
+         // printf("|%s", auth->ant_mode);
+ 
          printf("|%.4f|%.4f|%s|", auth->lat, auth->lon, auth->status);
         
          if(callhist) 
@@ -66,6 +73,7 @@ int print_line(power *pwr, authorization *auth, char *callhist)
          putchar('\n');
 }       
        
+
 
 
 int main ()
@@ -97,6 +105,10 @@ int main ()
             (fabs(ap[i]->lat-cur_lat) > 0.01)  || 
             (fabs(ap[i]->lon-cur_lon) > 0.01) ) {
          if(cur_fac_id) print_line(&pwr, ap[1-i], callhistory); /* print previous */
+
+         /* workaround for auths that don't include antenna mode */
+         if (strlen(ap[i]->ant_mode)) strcpy (ant_mode, ap[i]->ant_mode);
+
          cur_fac_id = ap[i]->fac_id;
          cur_lat = ap[i]->lat;
          cur_lon = ap[i]->lon;
@@ -104,6 +116,7 @@ int main ()
       }
 
 
+/* workaround for auths that don't include antenna mode */
 
       watts = ap[i]->power*1000.0;
       switch(ap[i]->hours_operation) {
