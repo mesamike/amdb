@@ -274,6 +274,10 @@ void lms_parse_facility(char *buffer, facility *fac)
    p1 = p2+1;
    *(p2 = strchr(p1, '|')) = 0;
 
+   /* 2.5 authorizing_act (FCC added this field 20231108 )*/
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+
    /* 3: callsign */
    p1 = p2+1;
    *(p2 = strchr(p1, '|')) = 0;

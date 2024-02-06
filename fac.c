@@ -15,6 +15,7 @@ int main ()
 
    infile = fopen("facility.dat", "r");
    while (fgets(buffer, 1024, infile)) {
+
       lms_parse_facility(buffer, &fac);
 
       if(
@@ -26,7 +27,7 @@ int main ()
                !strcmp(fac.fac_status, "INTOP") || 
                !strcmp(fac.fac_status, "AUCTN") || 
                !strcmp(fac.fac_status, "EXPER") || 
-               !strcmp(fac.fac_status, "UNKNO") || 
+               /* !strcmp(fac.fac_status, "UNKNO") || */ 
                !strcmp(fac.fac_status, "CPOFF"))
 #if 0
  &&

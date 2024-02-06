@@ -17,7 +17,7 @@ int main ()
       lms_parse_am_ant_sys(buffer, &ant);
       if((ant.hours_operation != 'X') 
          && (ant.eng_record_type == 'C')
-         && ((ant.am_dom_status == 'L') ))
+         && ((ant.am_dom_status == 'L')||(ant.am_dom_status == 'C')) )
             printf("%ld|%c|%f|%f|%f|%s|\n",
                ant.app_id,
                ant.hours_operation,

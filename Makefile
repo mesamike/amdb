@@ -2,7 +2,7 @@ fresh: clean all
 
 all: amdb.dat #dfac.dat
 	make delimited
-	$(eval amdbdiff = $(shell diff amdb.dat amdb.dat.old  2>&1 > /dev/null; echo $$?))
+	$(eval amdbdiff = $(shell diff amdb.dat.old amdb.dat  2>&1 > amdb.dat.diff; echo $$?))
 #	$(eval dfacdiff = $(shell diff dfac.dat dfac.dat.old  2>&1 > /dev/null; echo $$?))
 #	@([ ${amdbdiff} -eq 0 ] && [ ${dfacdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
 	@([ ${amdbdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
@@ -79,13 +79,19 @@ call_sign_history.dat: call_sign_history.zip
 #############################
 # get the ZIP files from FCC 
 facility.zip:
-	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/09-07-2023/facility.zip
+	$(eval currdate = $(shell date "+%m-%d-%Y"))
+	echo $(currdate)
+	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/facility.zip
 
 gis_am_ant_sys.zip:
-	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/09-07-2023/gis_am_ant_sys.zip
+	$(eval currdate = $(shell date "+%m-%d-%Y"))
+	echo $(currdate)
+	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/gis_am_ant_sys.zip
 
 gis_application.zip:
-	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/09-07-2023/gis_application.zip
+	$(eval currdate = $(shell date "+%m-%d-%Y"))
+	echo $(currdate)
+	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/gis_application.zip
 
 call_sign_history.zip:
 	wget ftp://ftp.fcc.gov/pub/Bureaus/MB/Databases/cdbs/call_sign_history.zip
