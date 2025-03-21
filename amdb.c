@@ -6,13 +6,13 @@
 #include "amdb.h"
 
 FILE *authfile;
-FILE *callhistfile;
-static char callhistory[BUFF_SIZE];
+//FILE *callhistfile;
+//static char callhistory[BUFF_SIZE];
 
 /* workaround for auths that don't include antenna mode */
 char ant_mode[5];
 
-
+#if 0
 void get_callsigns(int facid)
 {
    callsign_hist ch;
@@ -51,8 +51,10 @@ void get_callsigns(int facid)
    
    fclose(callhistfile);
 }
+#endif
 
-int print_line(power *pwr, authorization *auth, char *callhist)
+//int print_line(power *pwr, authorization *auth, char *callhist)
+int print_line(power *pwr, authorization *auth)
 {
          printf("%ld|%04d|%s|%s|%s|", 
             auth->fac_id, (unsigned)auth->freq, auth->callsign, auth->state, auth->city);
@@ -67,9 +69,10 @@ int print_line(power *pwr, authorization *auth, char *callhist)
          // printf("|%s", auth->ant_mode);
  
          printf("|%.4f|%.4f|%s|", auth->lat, auth->lon, auth->status);
-        
+#if 0        
          if(callhist) 
             printf("%s", callhist);
+#endif
          putchar('\n');
 }       
        
@@ -104,7 +107,8 @@ int main ()
       if(   (ap[i]->fac_id != cur_fac_id) || 
             (fabs(ap[i]->lat-cur_lat) > 0.01)  || 
             (fabs(ap[i]->lon-cur_lon) > 0.01) ) {
-         if(cur_fac_id) print_line(&pwr, ap[1-i], callhistory); /* print previous */
+         //if(cur_fac_id) print_line(&pwr, ap[1-i], callhistory); /* print previous */
+         if(cur_fac_id) print_line(&pwr, ap[1-i]); /* print previous */
 
          /* workaround for auths that don't include antenna mode */
          if (strlen(ap[i]->ant_mode)) strcpy (ant_mode, ap[i]->ant_mode);
@@ -127,13 +131,14 @@ int main ()
          case 'C': pwr.c = watts; break;
       }
 
-      get_callsigns(ap[i]->fac_id);
+      //get_callsigns(ap[i]->fac_id);
 
       i = 1 - i;   /* switch to other auth structure */
    }
 
 
-   print_line(&pwr, ap[i], callhistory);
+   //print_line(&pwr, ap[i], callhistory);
+   print_line(&pwr, ap[i]);
    fclose(authfile);
    return 0;
 }
