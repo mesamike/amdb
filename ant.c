@@ -5,26 +5,31 @@
 #include "amdb.h"
 
 FILE *antfile;
-char buffer[1024];	
+char buffer[BUFF_SIZE];	
 
 
 int main ()
 {
-   antenna ant;
+   lms_antenna ant;
+   float lat;
+   float lon;
 
-   antfile = fopen("gis_am_ant_sys.dat", "r");
-   while (fgets(buffer, 1024, antfile)) {
-      lms_parse_am_ant_sys(buffer, &ant);
-      if((ant.hours_operation != 'X') 
-         && (ant.eng_record_type == 'C')
-         && ((ant.am_dom_status == 'L')||(ant.am_dom_status == 'C')) )
-            printf("%ld|%c|%f|%f|%f|%s|\n",
-               ant.app_id,
+   antfile = fopen("app_am_antenna.dat", "r");
+   while (fgets(buffer, BUFF_SIZE, antfile)) {
+      lms_parse_app_am_antenna(buffer, &ant);
+      if( (ant.active_ind == 'Y')  
+         && (ant.hours_operation) ) { /* not blank */
+            lat = ant.lat_deg + ant.lat_min/60.0 + ant.lat_sec/3600.0;
+            lat = (ant.lat_dir == 'S') ? -lat : lat;
+            lon = ant.lon_deg + ant.lon_min/60.0 + ant.lon_sec/3600.0;
+            lon = (ant.lon_dir == 'W') ? -lon : lon;
+            printf("%s|%c|%f|%f|%f|\n",
+               ant.app_uuid,
                ant.hours_operation,
                ant.power,       
-               ant.lat,
-               ant.lon,
-               ant.ant_mode);
+               lat,
+               lon);
+         }   
    }
    fclose(antfile);
    return 0;

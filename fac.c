@@ -27,22 +27,19 @@ int main ()
                !strcmp(fac.fac_status, "INTOP") || 
                !strcmp(fac.fac_status, "AUCTN") || 
                !strcmp(fac.fac_status, "EXPER") || 
-               /* !strcmp(fac.fac_status, "UNKNO") || */ 
                !strcmp(fac.fac_status, "CPOFF"))
-#if 0
- &&
-         (
-            (fac.callsign[0] == 'K') || 
-            (fac.callsign[0] == 'W') ||
-            ((fac.callsign[0] == 'D') && ((fac.callsign[1] == 'K')||(fac.callsign[1]='W'))) 
-         )  
-#endif
       ) {
-         /* We'll pick up city and state from application record */
-         printf("%d|%s|%s|\n", 
-                 fac.fac_id,
+         /* We should pick up city, state and frequency from application record */
+         printf("%s|%s|%s|%d|%s|%s|%s|%d|%s|\n", 
                  fac.callsign,
-                 fac.fac_status);
+                 fac.comm_city,
+                 fac.comm_state,
+                 fac.fac_id,
+                 fac.fac_uuid,
+                 fac.filing_id,
+                 fac.fac_status,
+                 fac.fac_freq, 
+                 fac.service_code);
       }
           
    }

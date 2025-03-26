@@ -6,54 +6,8 @@
 #include "amdb.h"
 
 FILE *authfile;
-//FILE *callhistfile;
-//static char callhistory[BUFF_SIZE];
 
-/* workaround for auths that don't include antenna mode */
-char ant_mode[5];
 
-#if 0
-void get_callsigns(int facid)
-{
-   callsign_hist ch;
-   char buffer[BUFF_SIZE];
-   char prev[13];
-   int found = 0;
-
-   if(!(callhistfile = fopen("callhist.dat", "r")))
-      perror("callhist.dat"), exit(1);
-   
-   bzero(callhistory, sizeof(callhistory));
-   bzero(prev, sizeof(prev));
-
-   /* run through call history file looking for entries that match our facility id */
-   while(fgets(buffer, BUFF_SIZE, callhistfile)) {
-      parse_callhist(buffer, &ch); 
-      if(ch.fac_id == facid) { 
-         char *call = ch.callsign; 
-         found = 1;
-         /* if callsign starts with D (deleted), remove the D */ 
-         if(call[0] == 'D') call++;
-         /* if we found a callsign previously and it's different from new one, save it */
-         if(strlen(prev) && strcmp(prev, ch.callsign)) {
-            if(strlen(callhistory))
-               strcat(callhistory, ", ");
-            strcat(callhistory, prev); 
-          }
-          /* callsign from current entry becomes previous call sign next time around */
-          if(strlen(call) < 5)  /* filter out temporary callsigns */
-             strcpy(prev, call);
-      }
-      if(found && !(facid == ch.fac_id)) break;
-   }
-   /* no more call signs found, don't save the last one we 
-      found because it's the same as the current facility callsign */
-   
-   fclose(callhistfile);
-}
-#endif
-
-//int print_line(power *pwr, authorization *auth, char *callhist)
 int print_line(power *pwr, authorization *auth)
 {
          printf("%ld|%04d|%s|%s|%s|", 
@@ -64,15 +18,9 @@ int print_line(power *pwr, authorization *auth)
          putchar('|');
          if(pwr->c) printf("%.0f", pwr->c);
 
-        /* workaround for auths that don't include antenna mode */
-         printf("|%s", ant_mode);
-         // printf("|%s", auth->ant_mode);
- 
+         putchar('|'); // place holder of ant_mode
+
          printf("|%.4f|%.4f|%s|", auth->lat, auth->lon, auth->status);
-#if 0        
-         if(callhist) 
-            printf("%s", callhist);
-#endif
          putchar('\n');
 }       
        
@@ -87,6 +35,7 @@ int main ()
    unsigned long cur_fac_id = 0;
    float cur_lat;
    float cur_lon;
+   int cur_freq = 0;
    power pwr;
    float watts;
    char buffer[BUFF_SIZE];
@@ -100,20 +49,22 @@ int main ()
 
 
       /* workaround for night auths that don't specify coords */ 
-      if( (ap[i]->lat==0.0) && (ap[i]->lon ==0.0) ){
-         ap[i]->lat = cur_lat; ap[i]->lon = cur_lon;
-      }
-      /* new entry if different facility or different transmitter site */
+      //if( (ap[i]->lat==0.0) && (ap[i]->lon ==0.0) ){
+      //   ap[i]->lat = cur_lat; ap[i]->lon = cur_lon;
+      // }
+      /* new entry if different facility or different transmitter site or different frequency */
       if(   (ap[i]->fac_id != cur_fac_id) || 
+            (ap[i]->freq != cur_freq) ||
             (fabs(ap[i]->lat-cur_lat) > 0.01)  || 
             (fabs(ap[i]->lon-cur_lon) > 0.01) ) {
          //if(cur_fac_id) print_line(&pwr, ap[1-i], callhistory); /* print previous */
          if(cur_fac_id) print_line(&pwr, ap[1-i]); /* print previous */
 
          /* workaround for auths that don't include antenna mode */
-         if (strlen(ap[i]->ant_mode)) strcpy (ant_mode, ap[i]->ant_mode);
+         //if (strlen(ap[i]->ant_mode)) strcpy (ant_mode, ap[i]->ant_mode);
 
          cur_fac_id = ap[i]->fac_id;
+         cur_freq = ap[i]->freq;
          cur_lat = ap[i]->lat;
          cur_lon = ap[i]->lon;
          bzero(&pwr, sizeof(power));

@@ -4,17 +4,8 @@
 #define BUFF_SIZE 1024
 
 typedef struct {
-   char begin_date[20];
-   char callsign[13];
-   unsigned long hist_id;
-   unsigned short seq_id;
    unsigned long fac_id;
-   char change_date[20];
-} callsign_hist;
-
-typedef struct {
-   unsigned long app_id;
-   unsigned long fac_id;
+   char app_uuid[60];
    float freq;
    char callsign[13];
    char state[3];
@@ -24,29 +15,40 @@ typedef struct {
    float lat;
    float lon;
    char status[6];
-   char ant_mode[10];
 } authorization;    
 
 typedef struct {
-   unsigned long app_id;
+   char active_ind;
+   char app_uuid[36];
    unsigned long fac_id;
-   float fac_freq;
+   char am_freq[10];
    char comm_city[40];
    char comm_state[5];
    char app_service[5];
-   char app_type[5];
-} application;
-
+   char app_type[6];
+} appfac;
 
 typedef struct {
-   unsigned long app_id;
+   char app_uuid[100];
+   char active_ind;
+   char hours_operation;
+   int lat_deg;
+   char lat_dir;
+   int lat_min;
+   float lat_sec;
+   int lon_deg;
+   char lon_dir;
+   int lon_min;
+   float lon_sec;
+   float power;
+} lms_antenna;
+
+typedef struct {
+   char app_uuid[36];
    char hours_operation;
    float power;
-   double lat;
-   double lon;
-   char ant_mode[4];
-   char am_dom_status;
-   char eng_record_type;
+   float lat;
+   float lon;
 } antenna;
 
 typedef struct power_t {
@@ -67,18 +69,40 @@ typedef struct {
    char  comm_city[21];
    char  comm_state[3];
    int   fac_id;
+   char  fac_uuid[100];
+   char  filing_id[100];
    char  fac_status[6];
    int   fac_freq;
    char service_code[4];
 } facility;
-   
 
-void lms_parse_application(char *, application *);
-void lms_parse_am_ant_sys(char *, antenna *);
+typedef struct {
+   char active_ind;
+   char auth_type_code[10];
+   char status_code[10];
+   char discriminator_code[10];
+   char filing_version_id[100];
+   char filing_id[100];
+   char previous_filing_version_id[100];
+   char purpose_code[10];
+   char service_code[10];
+   char sub_purpose_code[10];
+} lms_lic_fil_ver;
+   
+typedef struct {
+   char filing_id[100];
+   char filing_version[100];
+   char prev_filing_version[100];
+} lic_fil_ver;
+
+void lms_parse_application_facility(char *, appfac *);
+void lms_parse_app_am_antenna(char *, lms_antenna *);
 void lms_parse_facility(char *, facility *);
+void lms_parse_license_filing_version(char *, lms_lic_fil_ver *);
+
+void parse_appfac(char *, appfac *);
 void parse_fac(char *, facility *);
-void parse_app(char *, application *);
 void parse_ant(char *, antenna *);
+void parse_lfv(char *, lic_fil_ver *);
 void parse_auth(char *, authorization *);
-void parse_callhist(char *, callsign_hist *);
 #endif

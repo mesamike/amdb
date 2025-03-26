@@ -1,19 +1,22 @@
 fresh: clean all
 
-all: amdb.dat #dfac.dat
-	make delimited
+all:  amdb.txt   #dfac.dat
 	$(eval amdbdiff = $(shell diff amdb.dat.old amdb.dat  2>&1 > amdb.dat.diff; echo $$?))
 #	$(eval dfacdiff = $(shell diff dfac.dat dfac.dat.old  2>&1 > /dev/null; echo $$?))
 #	@([ ${amdbdiff} -eq 0 ] && [ ${dfacdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
 	@([ ${amdbdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
 
-delimited:
+amdb.txt: amdb.dat
 	date -u "+Last Updated %a, %b %d, %Y at %H%M UTC" > update.txt
 	cat update.txt > amdb.txt
-	echo "FAC_ID|FREQ|CALL|STATE|COL|PWR_D|PWR_N|PWR_C|LAT|LON|MODE|STATUS|CALL_HIST" >> amdb.txt
+	echo "FAC_ID|FREQ|CALL|STATE|COL|PWR_D|PWR_N|PWR_C|LAT|LON|STATUS|CALL_HIST" >> amdb.txt
 	cat amdb.dat >> amdb.txt
 
-###################################
+
+amdb.dat:  amdb auths.dat
+	./amdb > amdb.dat
+
+################################
 # Compile the programs we need
 fac: fac.c parse.c amdb.h
 	gcc -o fac fac.c parse.c
@@ -21,93 +24,96 @@ fac: fac.c parse.c amdb.h
 ant: ant.c parse.c amdb.h
 	gcc -o ant ant.c parse.c
 
-app: app.c parse.c amdb.h
-	gcc -o app app.c parse.c
+licfilver: licfilver.c parse.c amdb.h
+	gcc -o licfilver licfilver.c parse.c
 
 auths: auths.c parse.c amdb.h
-	gcc -o auths auths.c parse.c
+	gcc -o auths auths.c parse.c -g
 
 amdb: amdb.c parse.c amdb.h
 	gcc -o amdb amdb.c parse.c
 
-dfac:   dfac.c parse.c amdb.h
-	gcc -o dfac dfac.c parse.c
+appfac: appfac.c parse.c amdb.h
+	gcc -o appfac appfac.c parse.c
 
 
-############################################
-# Make data file indexes for quicker seeking
 
+#################################
+#  Get the zip files from the FCC
 
-##########################
-# Distill the FCC data 
-fac.dat: fac facility.dat
-	./fac | sort -k 1,1 -t "|" > fac.dat
+license_filing_version.zip:
+	$(eval currdate = $(shell date "+%m-%d-%Y"))
+	echo $(currdate)
+	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/license_filing_version.zip
 
-ant.dat: ant gis_am_ant_sys.dat
-	./ant | sort -k 1,1 -t "|" > ant.dat 
-
-app.dat: app gis_application.dat
-	./app | sort -k 1,1 -t "|" > app.dat
-
-auths.dat: auths fac.dat app.dat ant.dat
-	./auths | sort -k 1,1 -t "|" > auths.dat
-
-amdb.dat: amdb auths.dat callhist.dat
-	./amdb > amdb.dat
-
-callhist.dat: call_sign_history.dat
-	sort -n -k 5,5 -k 4,4 -t '|' call_sign_history.dat > callhist.dat
-
-#dfac.dat: dfac facility.dat call_sign_history.dat
-#	./dfac > dfac.dat
-
-
-##########################
-# Extract the ZIP files
-facility.dat: facility.zip
-	unzip facility.zip
-
-gis_am_ant_sys.dat: gis_am_ant_sys.zip
-	unzip gis_am_ant_sys.zip
-
-gis_application.dat: gis_application.zip
-	unzip gis_application.zip
-
-call_sign_history.dat: call_sign_history.zip
-	unzip call_sign_history.zip
-
-#############################
-# get the ZIP files from FCC 
 facility.zip:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
 	echo $(currdate)
 	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/facility.zip
 
-gis_am_ant_sys.zip:
+app_am_antenna.zip:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
 	echo $(currdate)
-	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/gis_am_ant_sys.zip
+	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/app_am_antenna.zip
 
-gis_application.zip:
+application_facility.zip:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
 	echo $(currdate)
-	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/gis_application.zip
+	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/application_facility.zip
 
-call_sign_history.zip:
-	wget ftp://ftp.fcc.gov/pub/Bureaus/MB/Databases/cdbs/call_sign_history.zip
+application.zip:
+	$(eval currdate = $(shell date "+%m-%d-%Y"))
+	echo $(currdate)
+	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/application.zip
 
 
-#######################
-# cleanup rules
+
+##########################
+# Extract the ZIP files
+
+facility.dat: facility.zip
+	unzip facility.zip
+
+app_am_antenna.dat: app_am_antenna.zip
+	unzip app_am_antenna.zip
+
+license_filing_version.dat: license_filing_version.zip
+	unzip license_filing_version.zip
+
+application_facility.dat: application_facility.zip
+	unzip application_facility.zip
+
+application.dat: application.zip
+	unzip application.zip
+
+
+##########################
+# Distill the FCC data 
+
+auths.dat: auths appfac.dat ant.dat fac.dat licfilver.dat
+	./auths |sort -n -k 1 -k 2 -t "|" > auths.dat
+
+ant.dat: ant app_am_antenna.dat
+	./ant > ant.dat
+
+fac.dat: fac facility.dat 
+	./fac | sort -k 6  -t "|" > fac.dat
+
+appfac.dat: appfac application_facility.dat
+	./appfac | sort -n -k 2 -t "|" > appfac.dat
+
+licfilver.dat: licfilver license_filing_version.dat 
+	./licfilver | sort -k 1 -t "|" > licfilver.dat
+
+############
+# cleanup
 clean:
-	([ -f amdb.dat ] && mv amdb.dat amdb.dat.old) || touch amdb.dat.old
-#	([ -f dfac.dat ] && mv dfac.dat dfac.dat.old) || touch dfac.dat.old
-	rm -f *.dat *.txt *.zip *.log
+	rm -f *.dat *.zip *.txt
 
 pristine: clean
-	rm -f fac ant app auths amdb
+	rm -f fac  ant auths appfac licfilver amdb
 
-upload:
-	scp amdb.dat  update.txt rebuild gentoo@gentoo.net:~/mivadata/amdb/
+
+upload: 
+	scp amdb.dat update.txt rebuild gentoo@gentoo.net:~/mivadata/amdb/
 	scp amdb.txt gentoo@gentoo.net:~/radio/amdb/
-
