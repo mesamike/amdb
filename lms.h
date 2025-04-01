@@ -83,4 +83,39 @@ typedef struct {
    char  eol;                      /* always '^' */
 } lms_facility;
    
+
+
+application:
+aapp_app_fee_exempt_ind
+aapp_application_id
+aapp_attachment_ind
+aapp_callsign
+aapp_expiration_date
+aapp_fee_sufficient_code
+aapp_file_num
+aapp_frn
+aapp_prev_assoc_frn
+aapp_receipt_date
+aapp_reg_fee_exempt_ind
+aapp_remittance_id
+active_ind
+app_callsign
+authorization_ref_id
+cancellation_date
+channel_sharing_ind
+create_ts
+dts_reference_ind
+dts_waiver_distance
+frn_facility_association_flag
+last_update_ts
+months_to_expiration
+nprm_date
+nprm_number
+original_filing_date
+pleading_pending_ind
+report_and_order_date
+report_and_order_number
+rule_change_effective_date
+suspended_ind
+
 #endif

@@ -1,9 +1,9 @@
 fresh: clean all
 
-all:  amdb.txt   #dfac.dat
+all:  amdb.txt   dfac.dat
 	$(eval amdbdiff = $(shell diff amdb.dat.old amdb.dat  2>&1 > amdb.dat.diff; echo $$?))
-#	$(eval dfacdiff = $(shell diff dfac.dat dfac.dat.old  2>&1 > /dev/null; echo $$?))
-#	@([ ${amdbdiff} -eq 0 ] && [ ${dfacdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
+	$(eval dfacdiff = $(shell diff dfac.dat dfac.dat.old  2>&1 > /dev/null; echo $$?))
+	@([ ${amdbdiff} -eq 0 ] && [ ${dfacdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
 	@([ ${amdbdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
 
 amdb.txt: amdb.dat
@@ -36,6 +36,8 @@ amdb: amdb.c parse.c amdb.h
 appfac: appfac.c parse.c amdb.h
 	gcc -o appfac appfac.c parse.c
 
+dfac:   dfac.c  amdb.h
+	gcc -o dfac dfac.c parse.c
 
 
 #################################
@@ -105,15 +107,19 @@ appfac.dat: appfac application_facility.dat
 licfilver.dat: licfilver license_filing_version.dat 
 	./licfilver | sort -k 1 -t "|" > licfilver.dat
 
+dfac.dat: dfac facility.dat
+	./dfac > dfac.dat
+
+
 ############
 # cleanup
 clean:
 	rm -f *.dat *.zip *.txt
 
 pristine: clean
-	rm -f fac  ant auths appfac licfilver amdb
+	rm -f fac dfac  ant auths appfac licfilver amdb
 
 
 upload: 
-	scp amdb.dat update.txt rebuild gentoo@gentoo.net:~/mivadata/amdb/
+	scp amdb.dat dfac.dat update.txt rebuild gentoo@gentoo.net:~/mivadata/amdb/
 	scp amdb.txt gentoo@gentoo.net:~/radio/amdb/

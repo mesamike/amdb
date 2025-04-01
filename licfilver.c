@@ -23,11 +23,11 @@ int main ()
    while (!feof(lfvfile))  {
       lms_parse_license_filing_version(buffer, &lfv);
       if( (lfv.active_ind == 'Y')  
-         && !strcmp(lfv.service_code, "AM") 
+         && !strcmp(lfv.discriminator_code, "AM") 
          && !strcmp(lfv.status_code, "GRA")
          && ( !strcmp(lfv.purpose_code, "L2C") || 
-              !strcmp(lfv.purpose_code, "STA") || 
               !strcmp(lfv.purpose_code, "MOD") || 
+              !strcmp(lfv.purpose_code, "AMD") || 
               !strcmp(lfv.purpose_code, "REN"))   ) {
 
             printf("%s|%s|\n", lfv.filing_id, lfv.filing_version_id);

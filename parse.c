@@ -304,6 +304,7 @@ void lms_parse_facility(char *buffer, facility *fac)
    /* 4: callsign_date */
    p1 = p2+1;
    *(p2 = strchr(p1, '|')) = 0;
+   strcpy(fac->call_date, p1);
 
    /* 5: channel */
    p1 = p2+1;
@@ -397,25 +398,30 @@ void lms_parse_facility(char *buffer, facility *fac)
    *(p2 = strchr(p1, '|')) = 0;
    strcpy(fac->service_code, p1);
 
-/* we don't need anything beyond here */
-#if 0
    /* 26: station_type */
    p1 = p2+1;
    *(p2 = strchr(p1, '|')) = 0;
 
-   /* 27: tsid_dv */
+   /* 27: status_date */
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   strcpy(fac->status_date, p1);
+
+/* we don't need anything beyond here */
+#if 0
+   /* 28: tsid_dtv */
    p1 = p2+1;
    *(p2 = strchr(p1, '|')) = 0;
 
-   /* 28: tsid_ntsc */
+   /* 29: tsid_ntsc */
    p1 = p2+1;
    *(p2 = strchr(p1, '|')) = 0;
 
-   /* 29: virtual_channel */
+   /* 30: virtual_channel */
    p1 = p2+1;
    *(p2 = strchr(p1, '|')) = 0;
 
-   /* 30: eol */
+   /* 31: eol */
    p1 = p2+1;
    *(p2 = strchr(p1, '|')) = 0;
 #endif

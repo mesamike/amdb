@@ -73,7 +73,9 @@ typedef struct {
    char  filing_id[100];
    char  fac_status[6];
    int   fac_freq;
-   char service_code[4];
+   char  service_code[4];
+   char  call_date[25]; 
+   char  status_date[36];
 } facility;
 
 typedef struct {
