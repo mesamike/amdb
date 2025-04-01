@@ -4,7 +4,15 @@
 #define BUFF_SIZE 1024
 
 typedef struct {
+   char active_ind;
+   char callsign[20];
+   int seq_num;
+   char fac_uuid[36];
+} callsign_history;
+
+typedef struct {
    unsigned long fac_id;
+   char fac_uuid[60];
    char app_uuid[60];
    float freq;
    char callsign[13];
@@ -107,4 +115,5 @@ void parse_fac(char *, facility *);
 void parse_ant(char *, antenna *);
 void parse_lfv(char *, lic_fil_ver *);
 void parse_auth(char *, authorization *);
+void parse_callhist(char *, callsign_history *);
 #endif

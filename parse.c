@@ -4,6 +4,69 @@
 
 #include "amdb.h"
 
+
+void parse_callhist(char *buffer, callsign_history *ch)
+{
+   char *p1=buffer, *p2;
+
+   /* active_ind */
+  *(p2 = strchr(p1, '|')) = 0;
+   ch->active_ind = *p1;
+
+   /* authorizing_act */
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+
+   /* callsign */
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   strcpy(ch->callsign, p1);
+
+   /* callsign_effective_date */
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   
+   /* ceate_ts */
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   
+   /* facility_history_id */
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   
+   /* facility_status */
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   
+   /* facility_status_seq_num */
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   ch->seq_num = atoi(p1);
+
+   /* facility_uuid */
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   strcpy(ch->fac_uuid, p1);
+
+
+   /* last_update_ts */
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+
+   /* primary_station */
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   
+   /* service_code */   
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   
+   /* status_date */
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+
+}
+
 void parse_auth(char *buffer, authorization *auth)
 {
    char *p1=buffer, *p2;
@@ -11,6 +74,12 @@ void parse_auth(char *buffer, authorization *auth)
    /* fac_id */
    *(p2 = strchr(p1, '|')) = 0;
    auth->fac_id = atol(p1);
+
+   /* fac_uuid */
+   p1 = p2+1;
+   *(p2 = strchr(p1, '|')) = 0;
+   strcpy(auth->fac_uuid, p1);
+
 
    /* app_id */
    p1 = p2+1;

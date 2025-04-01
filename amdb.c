@@ -6,7 +6,51 @@
 #include "amdb.h"
 
 FILE *authfile;
+FILE *callhistfile;
 
+static char callhist[BUFF_SIZE];
+
+void get_callhist(char* fac_uuid)
+{
+   static char buffer[BUFF_SIZE];
+   char prev[20];
+   callsign_history ch;
+
+   if(!(callhistfile = fopen("fachist.dat", "r")))
+      perror("fachist.dat"), exit(1);
+
+   bzero(callhist, sizeof(callhist));
+   bzero(prev, sizeof(prev));
+
+   /* run through call history file looking for entries that match our facility id */
+   while(fgets(buffer, BUFF_SIZE, callhistfile)) {
+      parse_callhist(buffer, &ch);
+      if(!strcmp(ch.fac_uuid, fac_uuid)) {
+         char *call = ch.callsign;
+
+         /* if callsign starts with D (deleted), remove the D */
+         while(call[0] == 'D') call++; /* there may be more than one D, remove them all */
+
+         /* if we found a callsign previously and it's different from new one, save it */
+         if(strlen(prev) && strcmp(prev, call)) {
+            /* add a comma if it's not the first entry */
+            if(strlen(callhist))
+               strcat(callhist, ", ");
+
+            /* add call sign to list */
+            strcat(callhist, prev);
+          }
+
+          /* callsign from current entry becomes previous call sign next time around */
+          if(strlen(call) < 5)  /* filter out temporary callsigns */
+             strcpy(prev, call);
+      }
+   }
+   /* no more call signs found, don't save the last one we 
+      found because it's the same as the current facility callsign */
+
+   fclose(callhistfile);
+}
 
 int print_line(power *pwr, authorization *auth)
 {
@@ -20,7 +64,8 @@ int print_line(power *pwr, authorization *auth)
 
          putchar('|'); // place holder of ant_mode
 
-         printf("|%.4f|%.4f|%s|", auth->lat, auth->lon, auth->status);
+         printf("|%.4f|%.4f|%s|%s|", auth->lat, auth->lon, auth->status, callhist);
+         ////printf("|%.4f|%.4f|%s|", auth->lat, auth->lon, auth->status);
          putchar('\n');
 }       
        
@@ -82,7 +127,7 @@ int main ()
          case 'C': pwr.c = watts; break;
       }
 
-      //get_callsigns(ap[i]->fac_id);
+      get_callhist(ap[i]->fac_uuid);
 
       i = 1 - i;   /* switch to other auth structure */
    }

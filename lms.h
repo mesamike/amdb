@@ -118,4 +118,21 @@ report_and_order_number
 rule_change_effective_date
 suspended_ind
 
+
+
+facility_history.dat:
+	active_ind
+	authorizing_act
+	callsign
+	callsign_effective_date
+	create_ts
+	facility_history_id
+	facility_status
+	facility_status_seq_num
+	facility_uuid
+	last_update_ts
+	primary_station
+	service_code
+	status_date
+
 #endif

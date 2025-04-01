@@ -107,8 +107,9 @@ int main ()
                ant.lon, 
                fac.fac_status);
 #endif
-            printf("%d|%s|%s|%s|%s|%s|%c|%f|%7.4f|%8.4f|%s|\n",
+            printf("%d|%s|%s|%s|%s|%s|%s|%c|%f|%7.4f|%8.4f|%s|\n",
                fac.fac_id, 
+               fac.fac_uuid,
                app.app_uuid, 
                app.am_freq, 
                fac.callsign, 
