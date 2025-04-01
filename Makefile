@@ -89,19 +89,19 @@ application.dat: application.zip
 # Distill the FCC data 
 
 auths.dat: auths appfac.dat ant.dat fac.dat licfilver.dat
-	./auths |sort -n -k 1 -k 2 -t "|" > auths.dat
+	./auths |sort -n -k1,1 -k2,2 -t "|" > auths.dat
 
 ant.dat: ant app_am_antenna.dat
 	./ant > ant.dat
 
 fac.dat: fac facility.dat 
-	./fac | sort -k 6  -t "|" > fac.dat
+	./fac | sort -k6,6  -t "|" > fac.dat
 
 appfac.dat: appfac application_facility.dat
-	./appfac | sort -n -k 2 -t "|" > appfac.dat
+	./appfac | sort -k2,2n -t "|" > appfac.dat
 
 licfilver.dat: licfilver license_filing_version.dat 
-	./licfilver | sort -k 1 -t "|" > licfilver.dat
+	./licfilver | sort -k1,1 -t "|" > licfilver.dat
 
 dfac.dat: dfac facility.dat
 	mv dfac.dat dfac.dat.old
@@ -111,6 +111,8 @@ dfac.dat: dfac facility.dat
 ############
 # cleanup
 clean:
+	mv amdb.dat amdb.dat.old
+	mv dfac.dat dfac.dat.old
 	rm -f *.dat *.zip *.txt
 
 pristine: clean
