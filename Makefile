@@ -14,7 +14,6 @@ amdb.txt: amdb.dat
 
 
 amdb.dat:  amdb auths.dat
-	mv amdb.dat amdb.dat.old
 	./amdb > amdb.dat
 
 ################################
@@ -104,7 +103,6 @@ licfilver.dat: licfilver license_filing_version.dat
 	./licfilver | sort -k1,1 -t "|" > licfilver.dat
 
 dfac.dat: dfac facility.dat
-	mv dfac.dat dfac.dat.old
 	./dfac > dfac.dat
 
 
