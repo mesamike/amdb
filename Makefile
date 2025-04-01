@@ -14,6 +14,7 @@ amdb.txt: amdb.dat
 
 
 amdb.dat:  amdb auths.dat
+	mv amdb.dat amdb.dat.old
 	./amdb > amdb.dat
 
 ################################
@@ -45,27 +46,22 @@ dfac:   dfac.c  amdb.h
 
 license_filing_version.zip:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	echo $(currdate)
 	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/license_filing_version.zip
 
 facility.zip:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	echo $(currdate)
 	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/facility.zip
 
 app_am_antenna.zip:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	echo $(currdate)
 	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/app_am_antenna.zip
 
 application_facility.zip:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	echo $(currdate)
 	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/application_facility.zip
 
 application.zip:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	echo $(currdate)
 	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/application.zip
 
 
@@ -108,6 +104,7 @@ licfilver.dat: licfilver license_filing_version.dat
 	./licfilver | sort -k 1 -t "|" > licfilver.dat
 
 dfac.dat: dfac facility.dat
+	mv dfac.dat dfac.dat.old
 	./dfac > dfac.dat
 
 
