@@ -119,11 +119,17 @@ fachist.dat: facility_history.dat
 
 ############
 # cleanup
+.phony clean:
 clean:
-	mv amdb.dat amdb.dat.old
-	mv dfac.dat dfac.dat.old
+	if [ -f amdb.dat ]; then \
+	mv amdb.dat amdb.dat.old; \
+	fi 
+	if [ -f dfac.dat ]; then \
+	mv dfac.dat dfac.dat.old; \
+	fi 
 	rm -f *.dat *.zip *.txt
 
+,phony pristine:
 pristine: clean
 	rm -f fac dfac  ant auths appfac licfilver amdb
 
