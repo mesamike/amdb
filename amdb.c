@@ -64,7 +64,7 @@ int print_line(power *pwr, authorization *auth)
 
          putchar('|'); // place holder of ant_mode
 
-         printf("|%.4f|%.4f|%s|%s|", auth->lat, auth->lon, auth->status, callhist);
+         printf("|%.4f|%.4f|%s|%s", auth->lat, auth->lon, auth->status, callhist);
          ////printf("|%.4f|%.4f|%s|", auth->lat, auth->lon, auth->status);
          putchar('\n');
 }       
