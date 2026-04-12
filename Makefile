@@ -5,12 +5,12 @@ all:  amdb.txt   dfac.dat
 	$(eval amdbdiff = $(shell diff amdb.dat.old amdb.dat  2>&1 > amdb.dat.diff; echo $$?))
 	$(eval dfacdiff = $(shell diff dfac.dat dfac.dat.old  2>&1 > /dev/null; echo $$?))
 	@([ ${amdbdiff} -eq 0 ] && [ ${dfacdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
-	@([ ${amdbdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
+#	@([ ${amdbdiff} -eq 0 ] && echo no changes) || (echo some changes; make upload)
 
 amdb.txt: amdb.dat
 	date -u "+Last Updated %a, %b %d, %Y at %H%M UTC" > update.txt
 	cat update.txt > amdb.txt
-	echo "FAC_ID|FREQ|CALL|STATE|COL|PWR_D|PWR_N|PWR_C|MODE|LAT|LON|STATUS|CALL_HIST" >> amdb.txt
+	echo "FAC_ID|FREQ|CALL|STATE|COL|PWR_D|PWR_N|PWR_C|MODE|LAT|LON|STATUS|CALL_HIST|" >> amdb.txt
 	cat amdb.dat >> amdb.txt
 
 
@@ -46,27 +46,27 @@ dfac:   dfac.c  amdb.h
 
 license_filing_version.zip:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/license_filing_version.zip
+	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/license_filing_version.zip
 
 facility.zip:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/facility.zip
+	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/facility.zip
 
 app_am_antenna.zip:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/app_am_antenna.zip
+	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/app_am_antenna.zip
 
 application_facility.zip:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/application_facility.zip
+	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/application_facility.zip
 
 application.zip:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/application.zip
+	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/application.zip
 
 facility_history.zip:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	wget https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/facility_history.zip
+	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/facility_history.zip
 
 
 
