@@ -42,54 +42,32 @@ dfac:   dfac.c  amdb.h
 
 
 #################################
-#  Get the zip files from the FCC
+#  Get the dat files from the FCC
 
-license_filing_version.zip:
+license_filing_version.dat:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/license_filing_version.zip
+	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/license_filing_version.dat
 
-facility.zip:
+facility.dat:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/facility.zip
+	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/facility.dat
 
-app_am_antenna.zip:
+app_am_antenna.dat:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/app_am_antenna.zip
+	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/app_am_antenna.dat
 
-application_facility.zip:
+application_facility.dat:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/application_facility.zip
+	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/application_facility.dat
 
-application.zip:
+application.dat:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/application.zip
+	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/application.dat
 
-facility_history.zip:
+facility_history.dat:
 	$(eval currdate = $(shell date "+%m-%d-%Y"))
-	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/facility_history.zip
+	wget -U Mozilla/5.0 https://enterpriseefiling.fcc.gov/dataentry/api/download/dbfile/$(currdate)/facility_history.dat
 
-
-
-##########################
-# Extract the ZIP files
-
-facility.dat: facility.zip
-	unzip facility.zip
-
-app_am_antenna.dat: app_am_antenna.zip
-	unzip app_am_antenna.zip
-
-license_filing_version.dat: license_filing_version.zip
-	unzip license_filing_version.zip
-
-application_facility.dat: application_facility.zip
-	unzip application_facility.zip
-
-application.dat: application.zip
-	unzip application.zip
-
-facility_history.dat: facility_history.zip
-	unzip facility_history.zip
 
 
 ##########################
@@ -127,7 +105,7 @@ clean:
 	if [ -f dfac.dat ]; then \
 	mv dfac.dat dfac.dat.old; \
 	fi 
-	rm -f *.dat *.zip *.txt
+	rm -f *.dat  *.txt
 
 ,phony pristine:
 pristine: clean
@@ -135,5 +113,5 @@ pristine: clean
 
 
 upload: 
-	scp amdb.dat dfac.dat update.txt rebuild gentoo@gentoo.net:~/mivadata/amdb/
+	scp amdb.dat dfac.dat update.txt issue rebuild gentoo@gentoo.net:~/mivadata/amdb/
 	scp amdb.txt gentoo@gentoo.net:~/radio/amdb/
